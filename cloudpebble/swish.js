@@ -11,10 +11,10 @@ var CONNECTING_ = 'Connecting...';
 
 var status = CONNECTING_;
 var selectedShot = 0;
-var shots = ['FDrive', 'BDrive'];
+var shots = ['Forehand Drive', 'Backhand Drive'];
 var main = new UI.Card({
   title: 'Swish',
-  subtitle: 'Swing Analysis',
+  subtitle: shots[selectedShot],
   body: status
 });
 
@@ -34,7 +34,6 @@ var pingServer = function() {
       method: 'get',
     },
     function(data, status, request) {
-      main.subtitle(shots[selectedShot]);
       setStatus(READY_TO_RECORD);
     },
     function(error, status, request) {
@@ -44,20 +43,23 @@ var pingServer = function() {
 };
 
 var sendDataToServer = function(accelData) {
-  console.log('Sending accel data: ' + JSON.stringify(accelData));
+  var payload = {};
+  payload[shots[selectedShot]] = accelData;
+
+  console.log('Sending accel data: ' + JSON.stringify(payload));
 
   ajax(
     {
       url: 'https://swish-swing-detector.herokuapp.com/record',
       method: 'post',
       type: 'json',
-      data: accelData,
+      data: payload,
     },
     function(data, status, request) {
-      console.log(data);
+      console.log(data.response);
     },
     function(error, status, request) {
-      console.log('The ajax request failed: ' + error + ' : ' + status + ' : ' + request);
+      console.log('The ajax request failed: ' + error + " : " + status);
       setStatus(NO_CONNECTION);
     }
   );
@@ -65,7 +67,7 @@ var sendDataToServer = function(accelData) {
 
 var cycleSelectedShot = function(i) {
   selectedShot += i;
-  if(selectedShot > shots.length) {
+  if(selectedShot > shots.length - 1) {
     selectedShot = 0;
   } else if(selectedShot < 0) {
     selectedShot = shots.length - 1;
@@ -109,5 +111,7 @@ main.on('click', 'down', function(e) {
 main.on('click', 'up', function(e) {
   cycleSelectedShot(1);
 });
+
+
 
 

@@ -1,3 +1,4 @@
+import json
 import os
 from flask import Flask, request, Response
 
@@ -14,7 +15,7 @@ def ping():
 def record():
     new_data = request.json
     print new_data
-    return 'Got it!'
+    return json.dumps({"response": "Got it!"})
 
 
 @app.route("/download")

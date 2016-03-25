@@ -31,7 +31,7 @@ var pingServer = function() {
   ajax(
     {
       url: 'https://swish-swing-detector.herokuapp.com/ping',
-      method: 'get',
+      method: 'get'
     },
     function(data, status, request) {
       setStatus(READY_TO_RECORD);
@@ -53,10 +53,10 @@ var sendDataToServer = function(accelData) {
       url: 'https://swish-swing-detector.herokuapp.com/record',
       method: 'post',
       type: 'json',
-      data: payload,
+      data: payload
     },
     function(data, status, request) {
-      console.log(data.response);
+      //console.log(data.response);
     },
     function(error, status, request) {
       console.log('The ajax request failed: ' + error + " : " + status);
